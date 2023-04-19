@@ -63,19 +63,19 @@ valPaths, val_labels = read_path('val.txt')
 train_images = output_tensor(InputLayer(input_shape=(28, 28, 3)), "trainOutput.npy", trainPaths)
 test_images = output_tensor(InputLayer(input_shape=(28, 28, 3)), "testOutput.npy", testPaths)
 
-batch_size = 100  # 训练时的batch size
-test_batch = 50  # 测试时的batch size
+batch_size = 100  # training batch size
+test_batch = 50  # test batch size
 epoch = 20
 learning_rate = 1e-3
 
-ax = []  # 保存训练过程中x轴的数据（训练次数）用于画图
-ay_loss = []  # 保存训练过程中y轴的数据（loss）用于画图
+ax = []  # 保存 training 過程中x軸的數據（訓練次數）用於畫圖
+ay_loss = []  # 保存 training 過程中y軸的數據（loss）用於畫圖
 ay_acc = []
-testx = [] # 保存测试过程中x轴的数据（训练次数）用于画图
-testy_acc = []  # 保存测试过程中y轴的数据（loss）用于画图
-plt.ion()   # 打开交互模式
-iterations_num = 0 # 记录训练的迭代次数
-plt.rcParams['font.sans-serif']=['SimHei']   #防止中文标签乱码，还有通过导入字体文件的方法
+testx = [] # 保存 test 過程中x軸的數據（訓練次數）用於畫圖
+testy_acc = []  # 保存 training 過程中y軸的數據（loss）用於畫圖
+plt.ion()   
+iterations_num = 0 # 紀錄訓練的迭代次數
+plt.rcParams['font.sans-serif']=['SimHei']   #防止中文標籤亂碼
 plt.rcParams['axes.unicode_minus'] = False
 
 net = LeNet5.LeNet5()
@@ -91,7 +91,7 @@ for E in range(epoch):
         img = train_images[i*batch_size:(i+1)*batch_size].reshape(batch_size, 1, 28, 28)
         img = normalization.normalization(img)
         label = train_labels[i*batch_size:(i+1)*batch_size]
-        loss, prediction = net.forward(img, label, is_train=True)   # 训练阶段
+        loss, prediction = net.forward(img, label, is_train=True)   # 訓練階段
 
         epoch_loss += loss
         batch_loss += loss
@@ -106,7 +106,7 @@ for E in range(epoch):
             print(time.strftime("%Y-%m-%d %H:%M:%S") +
                   "   epoch:%5d , batch:%5d , avg_batch_acc:%.4f , avg_batch_loss:%.4f , lr:%f "
                   % (E+1, i+1, batch_acc/(batch_size*50), batch_loss/(batch_size*50), learning_rate))
-            # 绘制loss和acc变化曲线
+            # 繪製loss和acc變化曲線
             plt.figure(1)
             iterations_num += 1
             plt.clf()
@@ -134,13 +134,13 @@ for E in range(epoch):
     print(time.strftime("%Y-%m-%d %H:%M:%S") +
           "    **********epoch:%5d , avg_epoch_acc:%.4f , avg_epoch_loss:%.4f *************"
           % (E+1, epoch_acc/train_images.shape[0], epoch_loss/train_images.shape[0]))
-    # 在test set上进行测试
+    # 在test set上進行測試
     test_acc = 0
     for k in range(test_images.shape[0] // test_batch):
         img = test_images[k*test_batch:(k+1)*test_batch].reshape(test_batch, 1 ,28, 28)
         img = normalization.normalization(img)
         label = test_labels[k*test_batch:(k+1)*test_batch]
-        _, prediction = net.forward(img, label, is_train=False)   # 测试阶段
+        _, prediction = net.forward(img, label, is_train=False)   # 測試階段
 
         for j in range(prediction.shape[0]):
             if np.argmax(prediction[j]) == label[j]:
@@ -156,8 +156,8 @@ for E in range(epoch):
     plt.xlabel('Iteration', fontsize=10)
     plt.ylabel('Acc', fontsize=10)
     plt.plot(testx, testy_acc, 'g-')
-    plt.pause(0.4)  # 设置暂停时间，太快图表无法正常显示
+    plt.pause(0.4)  # 設置暫停時間，太快圖表無法正常顯示
 
 
-plt.ioff()       # 关闭画图的窗口，即关闭交互模式
-plt.show()       # 显示图片，防止闪退
+plt.ioff()       
+plt.show()      
